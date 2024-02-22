@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 load_dotenv()
 
 # Create streamlit page
-st.title("Chat with WEPA Data Bot")
-st.image("logo.png")
+st.title("Chat with your documents: a 300 page book about Data Mesh")
+st.image("logo_insights.png")
 
 embeddings = AzureOpenAIEmbeddings(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -46,7 +46,7 @@ rag_chain = (
     | StrOutputParser()
 )
 
-user_message = st.text_input("Please enter your message ")
+user_message = st.text_input("Please enter your Question... ")
 if user_message:
     response = rag_chain.invoke(user_message)
 
