@@ -39,7 +39,8 @@ llm = AzureChatOpenAI(
 
 # Prompt template
 template = """ You are a Question Answering bot. You answer in complete sentences and step-by-step whenever necessary.
-You provide references from the book Data Management at Scale by Piethein Strengholt.
+You always provide references from the book Data Management at Scale by Piethein Strengholt with page number and paragraph start sentence in 
+double quotation marks. 
 Answer the question based only on the following context, which can include information about Data:
 {context}
 Question: {question}
