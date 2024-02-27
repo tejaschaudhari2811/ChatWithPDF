@@ -3,11 +3,11 @@ import warnings
 import streamlit as st
 from langchain_openai import AzureChatOpenAI
 from dotenv import load_dotenv
-from langchain import hub
 from langchain_openai.embeddings import AzureOpenAIEmbeddings
 from langchain_community.vectorstores.faiss import FAISS
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from langchain_core.prompts import ChatPromptTemplate
 
 warnings.filterwarnings("ignore")
 load_dotenv()
@@ -37,17 +37,25 @@ llm = AzureChatOpenAI(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
 )
 
-prompt = hub.pull("rlm/rag-prompt")
+# Prompt template
+template = """ You are a Question Answering bot. You answer in complete sentences and step-by-step whenever necessary.
+You provide references from the book Data Management at Scale by Piethein Strengholt.
+Answer the question based only on the following context, which can include information about Data:
+{context}
+Question: {question}
+"""
+
+prompt2 = ChatPromptTemplate.from_template(template)
 
 rag_chain = (
     {"context": retriever | format_docs, "question": RunnablePassthrough()}
-    | prompt
+    | prompt2
     | llm
     | StrOutputParser()
 )
 
-user_message = st.text_input("Please enter your Question... ")
-if user_message:
-    response = rag_chain.invoke(user_message)
+user_message_1 = st.text_input(label="Please enter your Question about the book... ")
+if user_message_1:
+    response = rag_chain.invoke(user_message_1)
 
     st.markdown(response)
