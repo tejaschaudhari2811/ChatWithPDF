@@ -13,8 +13,10 @@ warnings.filterwarnings("ignore")
 load_dotenv()
 
 # Create streamlit page
-st.title("Chat with your documents: a 300 page book about Data Mesh")
-st.image("logo_insights.png")
+st.title("Chat with a 300 page book about Data Mesh")
+st.image("logos/logo_insights.png")
+st.sidebar.image("logos/book.jpg")
+st.sidebar.link_button("Go to the book", os.getenv("BOOK_LINK"))
 
 embeddings = AzureOpenAIEmbeddings(
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -55,7 +57,13 @@ rag_chain = (
     | StrOutputParser()
 )
 
-user_message_1 = st.text_input(label="Please enter your Question about the book... ")
+st.markdown(
+    """Enter your text (prompt) in the following box. Always prompt as concrete as possible and \
+             always cross check the references in the book that the tool provides. Please provide Feedback to Tejas :blush:."""
+)
+
+user_message_1 = st.text_input(label="Please enter your question...")
+
 if user_message_1:
     response = rag_chain.invoke(user_message_1)
 
